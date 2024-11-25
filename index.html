@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIY 手作教學</title>
+    <style>
+        .project-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .project-item {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .project-details {
+            display: none;
+            padding: 10px;
+            background-color: #f9f9f9;
+            margin-top: 10px;
+        }
+        .price {
+            color: #e44d26;
+            font-weight: bold;
+        }
+        .section-title {
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 15px;
+        }
+        .booking-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .booking-btn:hover {
+            background-color: #45a049;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .project-item {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .project-item h2 {
+            cursor: pointer;
+            padding: 10px;
+            margin: -15px -15px 10px -15px;
+            background-color: #f5f5f5;
+            border-radius: 5px 5px 0 0;
+            transition: background-color 0.3s;
+        }
+
+        .project-item h2:hover {
+            background-color: #e9e9e9;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .box {
+            width: 300px;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .box h2 {
+            margin-top: 0;
+        }
+
+        .box p {
+            color: #666;
+        }
+
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .chat-window {
+            display: none;
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .chat-header {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            height: 300px;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin: 5px;
+            padding: 8px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: #e9ecef;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background: #d4edda;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+
+        .chat-input button {
+            padding: 8px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .contact-section {
+            background-color: #f8f9fa;
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            padding: 20px;
+            margin: 10px;
+            min-width: 200px;
+        }
+
+        .contact-item i {
+            font-size: 24px;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .contact-item h3 {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .contact-item p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .social-links {
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #4CAF50;
+            font-size: 24px;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box" onclick="toggleDetails('phone-charm')">
+            <h2>【DIY】手機吊飾</h2>
+            <p>製作專屬的手機吊飾</p>
+        </div>
+        <div class="box" onclick="toggleDetails('silver-rings')">
+            <h2>【DIY】純銀對戒</h2>
+            <p>打造獨一無二的戒指</p>
+        </div>
+        <div class="box" onclick="toggleDetails('carpet')">
+            <h2>【DIY】絨毛地毯</h2>
+            <p>創作溫暖的家飾品</p>
+        </div>
+    </div>
+
+    <div class="project-container">
+        <h1>DIY 手作教學</h1>
+        
+        <div class="project-item">
+            <h2 onclick="toggleDetails('phone-charm')">【DIY】手機吊飾</h2>
+            <div id="phone-charm" class="project-details">
+                <h3 class="section-title">商品詳情</h3>
+                <ul>
+                    <li>材質：高級樹脂材料、金屬掛環、多種裝飾配件（如珠子、吊墜）</li>
+                    <li>製作預估時間：30～45分鐘（根據設計複雜度）</li>
+                    <li>基礎價格：<span class="price">NT$350 / 套</span>（包含基本材料包）</li>
+                </ul>
+
+                <h3 class="section-title">加價購</h3>
+                <h4>特殊配件：</h4>
+                <ul>
+                    <li>手工琉璃珠：加價 <span class="price">NT$50 / 顆</span></li>
+                    <li>客製化名字牌：加價 <span class="price">NT$100</span></li>
+                    <li>額外材料包：<span class="price">NT$200</span>（供後續製作）</li>
+                </ul>
+
+                <h3 class="section-title">組合搭配</h3>
+                <ul>
+                    <li>多人 DIY 優惠：兩人同行，總價享9折優惠</li>
+                    <li>禮盒包：加價 <span class="price">NT$50</span>，附精美禮盒</li>
+                </ul>
+                <button class="booking-btn" onclick="openBooking('手機吊飾')">立即預約</button>
+            </div>
+        </div>
+
+        <div class="project-item">
+            <h2 onclick="toggleDetails('silver-rings')">【DIY】純銀對戒</h2>
+            <div id="silver-rings" class="project-details">
+                <h3 class="section-title">商品詳情</h3>
+                <ul>
+                    <li>材質：925純銀（含手工工具與拋光材料）</li>
+                    <li>製作預估時間：2～3小時（視戒指設計而定）</li>
+                    <li>基礎價格：<span class="price">NT$3,500 / 對</span>（含純銀原料與指環模板）</li>
+                </ul>
+
+                <h3 class="section-title">加價購</h3>
+                <ul>
+                    <li>專屬刻字：每字 <span class="price">NT$50</span>（提供多種字型選擇）</li>
+                    <li>鍍金服務：加價 <span class="price">NT$500 / 對</span></li>
+                    <li>高級拋光處理：加價 <span class="price">NT$300</span></li>
+                </ul>
+
+                <h3 class="section-title">組合搭配</h3>
+                <ul>
+                    <li>情侶組優惠：加購 DIY 手機吊飾，手機吊飾享8折</li>
+                    <li>紀念套組：購買戒指同時加購拍立得拍照服務，加價 <span class="price">NT$200</span></li>
+                </ul>
+                <button class="booking-btn" onclick="openBooking('純銀對戒')">立即預約</button>
+            </div>
+        </div>
+
+        <div class="project-item">
+            <h2 onclick="toggleDetails('carpet')">【DIY】絨毛地毯</h2>
+            <div id="carpet" class="project-details">
+                <h3 class="section-title">商品詳情</h3>
+                <ul>
+                    <li>材質：高品質絨毛紗線（多色可選）、基底編織網</li>
+                    <li>製作預估時間：3～5小（依尺寸大小與圖案複雜度）</li>
+                </ul>
+
+                <h4>尺寸選擇：</h4>
+                <ul>
+                    <li>小尺寸（60x40 cm）：<span class="price">NT$800</span></li>
+                    <li>中尺寸（100x60 cm）：<span class="price">NT$1,200</span></li>
+                    <li>大尺寸（150x100 cm）：<span class="price">NT$2,500</span></li>
+                </ul>
+
+                <h3 class="section-title">加價購</h3>
+                <ul>
+                    <li>DIY 模板圖案：提供定制模板服務，加價 <span class="price">NT$200～500</span>（依圖案複雜度）</li>
+                    <li>進階材料包：包含更多顏色的紗線，加價 <span class="price">NT$300</span></li>
+                </ul>
+
+                <h3 class="section-title">組合搭配</h3>
+                <ul>
+                    <li>團體專案：四人以上團體報名，每人價格享 <span class="price">NT$100</span> 折扣</li>
+                    <li>完整裝飾組：加購防滑墊與清潔工具，組合價 <span class="price">NT$400</span>（原價 NT$600）</li>
+                </ul>
+                <button class="booking-btn" onclick="openBooking('絨毛地毯')">立即預約</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="phone-charm-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('phone-charm-modal')">&times;</span>
+            <h2>預約【DIY】手機吊飾</h2>
+            <form>
+                <div class="form-group">
+                    <label for="phone-charm-name">姓名：</label>
+                    <input type="text" id="phone-charm-name" name="phone-charm-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone-charm-phone">電話：</label>
+                    <input type="tel" id="phone-charm-phone" name="phone-charm-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone-charm-date">日期：</label>
+                    <input type="date" id="phone-charm-date" name="phone-charm-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone-charm-time">時間：</label>
+                    <input type="time" id="phone-charm-time" name="phone-charm-time" required>
+                </div>
+                <button type="submit" class="submit-btn">提交預約</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="silver-rings-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('silver-rings-modal')">&times;</span>
+            <h2>預約【DIY】純銀對戒</h2>
+            <form>
+                <div class="form-group">
+                    <label for="silver-rings-name">姓名：</label>
+                    <input type="text" id="silver-rings-name" name="silver-rings-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="silver-rings-phone">電話：</label>
+                    <input type="tel" id="silver-rings-phone" name="silver-rings-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="silver-rings-date">日期：</label>
+                    <input type="date" id="silver-rings-date" name="silver-rings-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="silver-rings-time">時間：</label>
+                    <input type="time" id="silver-rings-time" name="silver-rings-time" required>
+                </div>
+                <button type="submit" class="submit-btn">提交預約</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="carpet-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('carpet-modal')">&times;</span>
+            <h2>預約【DIY】絨毛地毯</h2>
+            <form>
+                <div class="form-group">
+                    <label for="carpet-name">姓名：</label>
+                    <input type="text" id="carpet-name" name="carpet-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="carpet-phone">電話：</label>
+                    <input type="tel" id="carpet-phone" name="carpet-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="carpet-date">日期：</label>
+                    <input type="date" id="carpet-date" name="carpet-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="carpet-time">時間：</label>
+                    <input type="time" id="carpet-time" name="carpet-time" required>
+                </div>
+                <button type="submit" class="submit-btn">提交預約</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBooking()">&times;</span>
+            <h2>預約表單</h2>
+            <form id="bookingForm" onsubmit="submitBooking(event)">
+                <div class="form-group">
+                    <label for="project">預約項目</label>
+                    <input type="text" id="project" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="name">姓名</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">聯絡電話</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">電子郵件</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="date">預約日期</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="time">預約時段</label>
+                    <select id="time" required>
+                        <option value="">請選擇時段</option>
+                        <option value="morning">上午 (09:00-12:00)</option>
+                        <option value="afternoon">下午 (14:00-17:00)</option>
+                        <option value="evening">晚上 (18:00-21:00)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="notes">備註</label>
+                    <textarea id="notes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">確認預約</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="chat-widget">
+        <button class="chat-button" onclick="toggleChat()">
+            <i class="fas fa-comments"></i>
+        </button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <span>客服機器人</span>
+                <span style="cursor: pointer" onclick="toggleChat()">×</span>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">您好！我是 AI 客服助手，很高興為您服務。請問有什麼我可以幫您的嗎？</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="請輸入訊息..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()">發送</button>
+            </div>
+        </div>
+    </div>
+
+    <section class="contact-section">
+        <div class="contact-container">
+            <h2>聯絡我們</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>工作室地址</h3>
+                    <p>台北市大安區和平東路二段106號</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <h3>聯絡電話</h3>
+                    <p>02-2737-6666</p>
+                    <p>0912-345-678</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    <h3>營業時間</h3>
+                    <p>週一至週日</p>
+                    <p>09:00 - 21:00</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <h3>電子郵件</h3>
+                    <p>info@diycrafts.com</p>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" title="Line"><i class="fab fa-line"></i></a>
+                <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script>
+        function toggleDetails(id) {
+            const details = document.getElementById(id);
+            const allDetails = document.getElementsByClassName('project-details');
+            
+            // 先關閉所有詳情
+            for (let detail of allDetails) {
+                if (detail.id !== id) {
+                    detail.style.display = "none";
+                }
+            }
+            
+            // 切換當前點擊的詳情顯示狀態
+            if (details.style.display === "none" || details.style.display === "") {
+                details.style.display = "block";
+            } else {
+                details.style.display = "none";
+            }
+        }
+
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage(message, 'user-message');
+                input.value = '';
+                
+                // 模擬 AI 回覆
+                setTimeout(() => {
+                    const response = getAIResponse(message);
+                    addMessage(response, 'bot-message');
+                }, 1000);
+            }
+        }
+
+        function addMessage(text, className) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            messageDiv.textContent = text;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function getAIResponse(message) {
+            // 簡單的關鍵字回覆邏輯
+            const keywords = {
+                '價格': '我們的商品價格範圍從 NT$350 到 NT$3,500 不等，具體取決於您選擇的項目。您想了解哪個項目的價格呢？',
+                '預約': '您可以點擊各個商品下方的「立即預約」按鈕進行預約，或告訴我您想預約哪個項目，我可以協助您。',
+                '時間': '我們的營業時間是週一到週日，上午 9 點到晚上 9 點。',
+                '地點': '我們的工作室位於台北市大安區和平東路二段106號。',
+                '教學': '每個 DIY 項目都會有專業老師全程指導，請不用擔心！',
+                '手機吊飾': '手機吊飾的基本價格是 NT$350/套，包含基本材料包。製作時間約 30-45 分鐘。',
+                '純銀對戒': '純銀對戒的基本價格是 NT$3,500/對，包含純銀原料與指環模板。製作時間約 2-3 小時。',
+                '地毯': '絨毛地毯有三種尺寸可選，價格從 NT$800 到 NT$2,500 不等。製作時間約 3-5 小時。'
+            };
+
+            for (let key in keywords) {
+                if (message.includes(key)) {
+                    return keywords[key];
+                }
+            }
+
+            return '抱歉，我不太理解您的問題。您可以詢問關於價格、預約、時間、地點或教學等相關問題，我很樂意為您解答！';
+        }
+
+        function openBooking(projectName) {
+            document.getElementById('bookingModal').style.display = 'block';
+            document.getElementById('project').value = projectName;
+            
+            // 設定最小日期為今天
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').min = today;
+        }
+
+        function closeBooking() {
+            document.getElementById('bookingModal').style.display = 'none';
+            document.getElementById('bookingForm').reset();
+        }
+
+        function submitBooking(event) {
+            event.preventDefault();
+            
+            // 獲取表單數據
+            const formData = {
+                project: document.getElementById('project').value,
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                notes: document.getElementById('notes').value
+            };
+
+            // 驗證電話格式
+            const phonePattern = /^[0-9]{8,10}$/;
+            if (!phonePattern.test(formData.phone)) {
+                alert('請輸入有效的電話號碼！');
+                return;
+            }
+
+            // 驗證電子郵件格式
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(formData.email)) {
+                alert('請輸入有效的電子郵件地址！');
+                return;
+            }
+
+            // 這裡可以添加發送預約數據到服務器的代碼
+            console.log('預約資料：', formData);
+            
+            // 顯示預約成功訊息
+            alert(`預約成功！
+項目：${formData.project}
+姓名：${formData.name}
+日期：${formData.date}
+時段：${formData.time}
+
+我們會盡快與您聯繫確認預約細節。`);
+            
+            closeBooking();
+        }
+
+        // 點擊 modal 外部關閉
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target == modal) {
+                closeBooking();
+            }
+        }
+    </script>
+</body>
+</html> 
